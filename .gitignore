@@ -1,0 +1,8 @@
+*.exe
+*.pdb
+*.lib
+~$*.xlsx
+.idea
+.vs
+*.ilk
+*.o
