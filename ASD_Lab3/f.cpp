@@ -1,12 +1,13 @@
 #include <iostream>
 using namespace std;
 
-int anyfunc() {
-    int hello{};
-    return hello;
+// int hello (int num);
+
+static int hello (int num) {
+    return num;
 }
 
 int main()
 {
-    cout << anyfunc();
+    cout << hello(5);
 }
