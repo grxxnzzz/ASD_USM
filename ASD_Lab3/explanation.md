@@ -74,3 +74,90 @@ static int hello (int num)
 То будут созданы 2 копии тела функции `hello`.
 
 # 2. Stack, Heap, Static Memory
+# 2.1. Объяснение `stack2.cpp`
+```cpp
+// фрагмент stack2.cpp
+#include <stdlib.h>
+#include <iostream>
+
+int* stackMemory1() 
+{
+    int a = 1; //local
+    return &a; 
+}
+
+int* stackMemory2()
+{
+    int b = 2; //local
+    return &b; //returning pointer on local
+}
+
+int main()
+{
+    int* b = stackMemory1();
+    int a1 = *b; // 1
+    int* c = stackMemory2();
+    int a2 = *c; // 2
+    int a3 = *b; // 2
+
+    std::cout << a1 << std::endl; // prints 1
+    std::cout << a2 << std::endl; // prints 2
+    std::cout << a3 << std::endl; // prints 2
+    std::cout << ((std::byte*) b - (std::byte*) c) << std::endl; // prints 0, pointers are equal
+
+    return 0;
+}
+```
+Возвращаемые указатели из функций `stackMemory1` и `stackMemory2` указывают на локальные переменные, которые выходят из области видимости при выполнении соответствующих функций. Это приведет к **неопределенному поведению**, когда указатели разыменуются в `main`.
+
+
+# 2.2 `a` в `static1.cpp` vs `a` в `static2.cpp`
+
+### Static 1
+```cpp
+#include <iostream>
+// no global variable
+void staticMemory()
+{
+    static int a = 0; //static is a keyword for us
+    std::cout << "a: " << a << std::endl;
+    a += 1;
+}
+
+int main()
+{
+    staticMemory(); // prints 0
+    staticMemory(); // prints 1
+    staticMemory(); // prints 2
+    return 0;
+}
+```
+### Static 2
+```cpp
+#include <iostream>
+
+int a = 0; //global variable
+
+void staticMemory()
+{
+    std::cout << "a: " << a << std::endl;
+    a += 1;
+}
+
+int main()
+{
+    staticMemory(); // prints 0
+    staticMemory(); // prints 1
+    staticMemory(); // prints 2
+    return 0;
+}
+```
+Переменная `a` в `static_1` объявлена как статическая переменная внутри функции `staticMemory`.
+
+Чтобы сделать `static_2` эквивалентным `static_1` в плане невозможности импортирования переменной в другом файле, надо использовать `static` при объявлении глобальной переменной:
+
+```cpp
+static int a = 0;
+```
+
+---
