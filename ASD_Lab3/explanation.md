@@ -159,5 +159,3 @@ int main()
 ```cpp
 static int a = 0;
 ```
-
----
